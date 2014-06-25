@@ -1004,7 +1004,7 @@ sharing:
 end
 
 data CasesBranch:
-  | s-cases-branch(l :: Loc, name :: String, args :: List<Bind>, body :: Expr) with:
+  | s-cases-branch(l :: Loc, pat-loc :: Loc, name :: String, args :: List<Bind>, body :: Expr) with:
     label(self): "s-cases-branch" end,
     tosource(self):
       PP.nest(INDENT,
@@ -1013,7 +1013,7 @@ data CasesBranch:
             self.args.map(lam(a): a.tosource() end)) + break-one + str-thickarrow) + break-one +
         self.body.tosource())
     end
-  | s-singleton-cases-branch(l :: Loc, name :: String, body :: Expr) with:
+  | s-singleton-cases-branch(l :: Loc, pat-loc :: Loc, name :: String, body :: Expr) with:
     label(self): "s-singleton-cases-branch" end,
     tosource(self):
       PP.nest(INDENT,
@@ -1321,12 +1321,12 @@ default-map-visitor = {
     s-if-pipe-else(l, branches.map(_.visit(self)), _else.visit(self))
   end,
 
-  s-cases-branch(self, l :: Loc, name :: String, args :: List<Bind>, body :: Expr):
-    s-cases-branch(l, name, args.map(_.visit(self)), body.visit(self))
+  s-cases-branch(self, l :: Loc, pat-loc :: Loc, name :: String, args :: List<Bind>, body :: Expr):
+    s-cases-branch(l, pat-loc, name, args.map(_.visit(self)), body.visit(self))
   end,
 
-  s-singleton-cases-branch(self, l :: Loc, name :: String, body :: Expr):
-    s-singleton-cases-branch(l, name, body.visit(self))
+  s-singleton-cases-branch(self, l :: Loc, pat-loc :: Loc, name :: String, body :: Expr):
+    s-singleton-cases-branch(l, pat-loc, name, body.visit(self))
   end,
 
   s-cases(self, l :: Loc, typ :: Ann, val :: Expr, branches :: List<CasesBranch>):
@@ -1783,11 +1783,11 @@ default-iter-visitor = {
     lists.all(_.visit(self), branches) and _else.visit(self)
   end,
   
-  s-cases-branch(self, l :: Loc, name :: String, args :: List<Bind>, body :: Expr):
+  s-cases-branch(self, l :: Loc, pat-loc :: Loc, name :: String, args :: List<Bind>, body :: Expr):
     lists.all(_.visit(self), args) and body.visit(self)
   end,
   
-  s-singleton-cases-branch(self, l :: Loc, name :: String, body :: Expr):
+  s-singleton-cases-branch(self, l :: Loc, pat-loc :: Loc, name :: String, body :: Expr):
     body.visit(self)
   end,
   
@@ -2234,12 +2234,12 @@ dummy-loc-visitor = {
     s-if-pipe-else(dummy-loc, branches.map(_.visit(self)), _else.visit(self))
   end,
 
-  s-cases-branch(self, l :: Loc, name :: String, args :: List<Bind>, body :: Expr):
-    s-cases-branch(dummy-loc, name, args.map(_.visit(self)), body.visit(self))
+  s-cases-branch(self, l :: Loc, pat-loc :: Loc, name :: String, args :: List<Bind>, body :: Expr):
+    s-cases-branch(dummy-loc, dummy-loc, name, args.map(_.visit(self)), body.visit(self))
   end,
 
-  s-singleton-cases-branch(self, l :: Loc, name :: String, body :: Expr):
-    s-singleton-cases-branch(dummy-loc, name, body.visit(self))
+  s-singleton-cases-branch(self, l :: Loc, pat-loc :: Loc, name :: String, body :: Expr):
+    s-singleton-cases-branch(dummy-loc, dummy-loc, name, body.visit(self))
   end,
 
   s-cases(self, l :: Loc, typ :: Ann, val :: Expr, branches :: List<CasesBranch>):
