@@ -1009,7 +1009,7 @@ define(["js/runtime-util", "js/ffi-helpers", "trove/ast", "trove/srcloc", "js/di
           }),
           answer: NAMESPACE.get("nothing")
         });
-      });
+      }, "parse-pyret loading dialects");
     });
   });
 });
