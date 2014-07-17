@@ -451,7 +451,7 @@ check:
   many-optional-flag = {
     foo: flag(many, "Foo"),
     bar: next-val-default(read-number, 42, some("b"), many, "Bar"),
-    "4": flag(many, "Flag-4")
+#    "4": flag(many, "Flag-4")
   }
   parse-args(many-optional-flag, [list: "-foo", "-foo", "-foo"]) is success(dict([list: "foo", [list: true, true, true]]), [list: ])
   parse-args(many-optional-flag, [list: "-b", "-foo", "--bar", "3", "--bar", "-foo"])
@@ -461,7 +461,7 @@ check:
   parse-args(many-optional-flag, [list: "--bar", "-4"]) is success(dict([list: "bar", [list: -4]]), [list: ])
   parse-args(many-optional-flag, [list: "--bar", "-not-a-number"]) satisfies error-text("Unknown command line option -not-a-number")
   parse-args(many-optional-flag, [list: "--bar", "-4"]) is success(dict([list: "bar", [list: -4]]), [list: ])
-  parse-args(many-optional-flag, [list: "--bar", "-4", "-4"]) is success(dict([list: "bar", [list: -4], "4", [list: true]]), [list: ])
+#  parse-args(many-optional-flag, [list: "--bar", "-4", "-4"]) is success(dict([list: "bar", [list: -4], "4", [list: true]]), [list: ])
 
   many-required-equals = {
     foo: equals-val(read-bool, required-many, "Foo"),
@@ -481,11 +481,11 @@ check:
   many-required-next-num = {
     foo: next-val(read-number, required-many, "Foo"),
     bar: flag(many, "Bar"),
-    "4": flag(many, "Flag-4")
+#    "4": flag(many, "Flag-4")
   }
   parse-args(many-required-next-num, [list: "--foo", "-bar"]) satisfies error-text("Missing value for option foo; it must be of the form --foo <number>")
   parse-args(many-required-next-num, [list: "--foo", "-4"]) is success(dict([list: "foo", [list: -4]]), [list: ])
-  parse-args(many-required-next-num, [list: "--foo", "-4", "-4"]) is success(dict([list: "foo", [list: -4], "4", [list: true]]), [list: ])
+#  parse-args(many-required-next-num, [list: "--foo", "-4", "-4"]) is success(dict([list: "foo", [list: -4], "4", [list: true]]), [list: ])
 
   custom-parser = read-custom("red|green|blue", lam(arg-index, name, val):
       if val == "red": left(red)
