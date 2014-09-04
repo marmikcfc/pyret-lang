@@ -4,6 +4,7 @@ provide-types *
 import ast as A
 import string-dict as SD
 import "compiler/list-aux.arr" as LA
+import equality as E
 
 all2-strict  = LA.all2-strict
 map2-strict  = LA.map2-strict
@@ -64,23 +65,6 @@ fun <T> list-compare(a :: List<T>, b :: List<T>) -> Comparison:
             | less-than    => less-than
             | greater-than => greater-than
             | equal        => list-compare(a-r, b-r)
-          end
-      end
-  end
-end
-
-fun <T> old-list-compare(a :: List<T>, b :: List<T>) -> Comparison:
-  cases(List<T>) a:
-    | empty => cases(List<T>) b:
-        | empty   => equal
-        | link(_) => less-than
-      end
-    | link(a-f, a-r) => cases(List<T>) b:
-        | empty => greater-than
-        | link(b-f, b-r) =>
-          if a-f < b-f:       less-than
-          else if a-f == b-f: list-compare(a-r, b-r)
-          else:               greater-than
           end
       end
   end
@@ -321,7 +305,7 @@ sharing:
   _lessequal    (self, other :: Type) -> Boolean: self._comp(other) <> greater-than end,
   _greaterthan  (self, other :: Type) -> Boolean: self._comp(other) == greater-than end,
   _greaterequal (self, other :: Type) -> Boolean: self._comp(other) <> less-than    end,
-  _equal        (self, other :: Type) -> Boolean: self._comp(other) == equal        end,
+  _equals       (self, other :: Type, _) -> E.EqualityResult: E.from-boolean(self._comp(other) == equal) end,
   _comp(self, other :: Type) -> Comparison:
     cases(Type) self:
       | t-bot =>
@@ -365,7 +349,7 @@ sharing:
           | t-var(_)            => greater-than
           | t-arrow(b-args, b-ret) =>
             fold-comparisons([list:
-              old-list-compare(a-args, b-args),
+              list-compare(a-args, b-args),
               a-ret._comp(b-ret)
             ])
           | t-app(_, _)      => less-than
@@ -381,7 +365,7 @@ sharing:
           | t-arrow(_, _)    => greater-than
           | t-app(b-onto, b-args) =>
             fold-comparisons([list:
-              old-list-compare(a-args, b-args),
+              list-compare(a-args, b-args),
               a-onto._comp(b-onto)
             ])
           | t-record(_)       => less-than
@@ -410,7 +394,7 @@ sharing:
           | t-record(_)      => greater-than
           | t-forall(b-introduces, b-onto) =>
             fold-comparisons([list:
-              old-list-compare(a-introduces, b-introduces),
+              list-compare(a-introduces, b-introduces),
               a-onto._comp(b-onto)
             ])
           | t-top               => less-than
