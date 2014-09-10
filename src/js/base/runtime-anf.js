@@ -3646,6 +3646,7 @@ function isMethod(obj) { return obj instanceof PMethod; }
         'equal_now': equalNow,
         'equal_always3': equalAlways3,
         'equal_always': equalAlways,
+        'combineEquality': combineEquality,
 
         'raise': raiseJSJS,
 
