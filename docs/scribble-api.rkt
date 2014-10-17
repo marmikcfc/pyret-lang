@@ -76,8 +76,6 @@
 (define curr-method-location (make-parameter 'shared))
 (define EMPTY-XREF-TABLE (make-hash))
 
-
-
 ;;;;;;;;;; API for generated module information ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Each module specification has the form
@@ -93,8 +91,6 @@
 (define (spec-fields l) (if (cons? l) (rest l) #f))
 (define field-name first)
 (define field-val second)
-
-
 
 ;;;;;;;;;; Functions to sanity check generated documentation ;;;;;;;;;;;;;;;;;;
 
@@ -175,7 +171,6 @@
       (let ([d (findf (lambda (d)
         (equal? for-val (field-val (assoc by-field (spec-fields d))))) indefns)])
         d)))
-
 
 ;; finds definition in defn spec list that has given value for designated field
 ;; by-field is symbol, indefns is list<specs>
@@ -347,10 +342,10 @@
   (define name-elt (make-header-elt-for (seclink (xref (curr-module-name) variant-name) (tt variant-name)) variant-name))
   (define detector-name (string-append "is-" variant-name))
   (append
-    (list 
+    (list
       (para #:style (div-style "boxed") (tt name-elt " :: " return))
       #;(render-fun-helper
-       '(fun) detector-name 
+       '(fun) detector-name
        (list 'part (tag-name (curr-module-name) detector-name))
        (a-arrow (a-id "Any") (a-id "Boolean" (xref "<global>" "Boolean")))
        (a-id "Boolean" (xref "<global>" "Boolean")) (list (list "value" #f)) '() '() '()))
@@ -369,7 +364,7 @@
        (apply a-arrow (append member-types (list return)))
        return members-as-args '() '() '())
       #;(render-fun-helper
-       '(fun) detector-name 
+       '(fun) detector-name
        (list 'part (tag-name (curr-module-name) detector-name))
        (a-arrow (a-id "Any") (a-id "Boolean" (xref "<global>" "Boolean")))
        (a-id "Boolean" (xref "<global>" "Boolean")) (list (list "value" #f)) '() '() '()))
@@ -392,7 +387,6 @@
     (if contract (tt modifier name " :: " contract) (tt modifier name))) members))
   (define name (seclink (xref processing-module variant-name) (tt variant-name)))
   (list (dt-indent (tt "| " name "(" (add-between args ", ") ")"))))
-
 
 ;@(define (member-spec2 data-name variant-name name type contract)
 
@@ -485,7 +479,7 @@
          (list (subsubsub*section #:tag (list (tag-name (curr-module-name) name) (tag-name (curr-module-name) (string-append "is-" name))) name) body))))
 
 @(define (with-members . members)
-   (if (empty? members) 
+   (if (empty? members)
        empty
        (list "Methods" members)))
 @(define (members . mems)
@@ -556,7 +550,6 @@
           [#t an-exp]))]
      [#t an-exp]))
 
-
 @(define (render-multiline-args names types descrs)
    (map (lambda (name type descr)
           (cond [(and name type descr)
@@ -582,8 +575,8 @@
 ;; render documentation for a function
 @(define (render-fun-helper spec name part-tag contract-in return-in args alt-docstrings examples contents)
    (define is-method (symbol=? (first spec) 'method-spec))
-   (let* ([contract (or contract-in (interp (get-defn-field 'contract spec)))] 
-          [return (or return-in (interp (get-defn-field 'return spec)))] 
+   (let* ([contract (or contract-in (interp (get-defn-field 'contract spec)))]
+          [return (or return-in (interp (get-defn-field 'return spec)))]
           [orig-argnames (if (list? args) (map first args) (get-defn-field 'args spec))]
           [input-types (map (lambda(i) (first (drop contract (+ 1 (* 2 i))))) (range 0 (length orig-argnames)))]
           [argnames (if is-method (drop orig-argnames 1) orig-argnames)]
@@ -627,8 +620,8 @@
                     (render-singleline-args argnames input-types)
                     (if return
                       (list (tt ")" " -> " return))
-                      (list (tt ")")))))] 
-                [else 
+                      (list (tt ")")))))]
+                [else
                  (nested #:style (div-style "boxed")
                  (apply para #:style (dl-style "multiline-args")
                    (append
@@ -652,7 +645,7 @@
 
 @(define (collection-doc name arg-pattern return)
   (define name-part (make-header-elt-for (seclink (xref (curr-module-name) name) (tt name)) name))
-  (define patterns (add-between (map (lambda (a) (list (car a) " :: " (cdr a))) arg-pattern) ","))
+  (define patterns (add-between (map (lambda (a) (list (car a) " :: " (cdr a))) arg-pattern) ", "))
   (para #:style (div-style "boxed pyret-header")
     (tt "[" name-part ": " patterns ", ..." "] -> " return)))
 
@@ -687,7 +680,6 @@
     (equal? (mod-name mspec) mname)) ALL-GEN-DOCS)])
     m))
 
-
 (define (append-gen-docs s-exp)
   (define mod (read-mod s-exp))
   (define modname (second s-exp))
@@ -701,4 +693,3 @@
     (set! ALL-GEN-DOCS (cons s-exp ALL-GEN-DOCS)))
   (set! curr-doc-checks (init-doc-checker ALL-GEN-DOCS))
   '())
-
