@@ -570,7 +570,7 @@
                  (list (tt name " :: " type))]
                 [else (list (tt name))]))
         names types))
-  (add-between args ", "))
+  (add-between args (tt ", ")))
 
 ;; render documentation for a function
 @(define (render-fun-helper spec name part-tag contract-in return-in args alt-docstrings examples contents)
