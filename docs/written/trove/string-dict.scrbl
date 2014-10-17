@@ -413,8 +413,8 @@ check:
   msd1 = [mutable-string-dict: "a", 5, "b", 10]
   smsd1 = msd1.seal()
   smsd1.get-value-now("a") is 5
-  smsd1.set("a", 15) raises "Cannot modify sealed string dict"
-  msd1.set("a", 15) is nothing
+  smsd1.set-now("a", 15) raises "Cannot modify sealed string dict"
+  msd1.set-now("a", 15) is nothing
   msd1.get-value-now("a") is 15
   smsd1.get-value-now("a") is 15
 end
