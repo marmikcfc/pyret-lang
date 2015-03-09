@@ -1,7 +1,6 @@
-define(["js/runtime-util", "trove/lists", "trove/sets", "trove/option", "trove/either", "trove/equality", "trove/error", "trove/srcloc", "trove/contracts", "trove/checker"],
+define(["js/runtime-util" , "trove/lists", "trove/sets", "trove/option", "trove/either", "trove/equality", "trove/error", "trove/srcloc", "trove/contracts", "trove/checker"],
        function(util, listLib, setLib, optLib, eitherLib, equalityLib, errorLib, srclocLib, contractsLib, checkerLib) {
   return util.memoModule("ffi-helpers", function(runtime, namespace) {
-
     return runtime.loadModules(namespace, [listLib, setLib, optLib, eitherLib, equalityLib, errorLib, srclocLib, contractsLib, checkerLib], function(L, Se, O, E, EQ, ERR, S, CON, CH) {
 
       var gf = runtime.getField;
