@@ -3535,9 +3535,7 @@ function isMethod(obj) { return obj instanceof PMethod; }
             return module(thisRuntime, namespace);
           }
           else if (typeof module === "object") {
-            console.log("Loading module ", module);
             var innerModule = module.theModule();
-            console.log("One step ", innerModule);
             return innerModule(thisRuntime, namespace);
           }
         },

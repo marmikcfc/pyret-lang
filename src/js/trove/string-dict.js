@@ -6,7 +6,6 @@ define(["js/runtime-util", "js/namespace", "js/ffi-helpers"], function(util, Nam
      "make-string-dict", "string-dict",
      "make-mutable-string-dict", "mutable-string-dict"],
      function(runtime, namespace /* no pyret dependencies */) {
-        console.log("Loading string dict", runtime, namespace);
        return runtime.loadJSModules(namespace, [ffi], function(F) {
          var O = runtime.makeObject;
          var F = runtime.makeFunction;
