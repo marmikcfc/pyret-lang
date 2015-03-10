@@ -1,5 +1,7 @@
 define(["js/runtime-util" , "trove/lists", "trove/sets", "trove/option", "trove/either", "trove/equality", "trove/error", "trove/srcloc", "trove/contracts", "trove/checker"],
        function(util, listLib, setLib, optLib, eitherLib, equalityLib, errorLib, srclocLib, contractsLib, checkerLib) {
+       // NOTE(joe): importing these directly, because due to dependency
+       // issues, need to do a manual top-sort of the builtins here
   return util.memoModule("ffi-helpers", function(runtime, namespace) {
     return runtime.loadModules(namespace, [listLib, setLib, optLib, eitherLib, equalityLib, errorLib, srclocLib, contractsLib, checkerLib], function(L, Se, O, E, EQ, ERR, S, CON, CH) {
 
