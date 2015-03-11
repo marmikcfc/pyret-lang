@@ -3568,9 +3568,7 @@ function isMethod(obj) { return obj instanceof PMethod; }
       var wl = loadWorklist({name: startName, dependencies: modules });
       var finalModMap = {};
       var rawModules = wl.forEach(function(m) {
-        if(m.mod.name === startName) {
-
-        return; }
+        if(m.mod.name === startName) { return; }
         if(m.mod.theModule.length == 2) { // Already a runtime/namespace function
           var thisRawMod = m.mod.theModule;
         }
@@ -3578,6 +3576,7 @@ function isMethod(obj) { return obj instanceof PMethod; }
           var rawDeps = m.mod.dependencies.map(function(d) {
             return finalModMap[d.name];
           });
+          console.log("Raw deps for ", startName, " are: ", rawDeps);
           var thisRawMod = m.mod.theModule.apply(null, rawDeps);
         }
         finalModMap[m.mod.name] = thisRawMod;
@@ -3596,7 +3595,7 @@ function isMethod(obj) { return obj instanceof PMethod; }
           }
           else if (typeof module === "object") {
               if(module.dependencies === undefined) {
-                console.log("Undefine dependencies remain: ", module);
+                console.log("Undefined dependencies remain: ", module);
                 return module;
               }
               return loadBuiltinModules(module.dependencies, module.name,
@@ -3604,6 +3603,9 @@ function isMethod(obj) { return obj instanceof PMethod; }
                   var innerModule = module.theModule.apply(null, Array.prototype.slice.call(arguments));
                   return innerModule(thisRuntime, namespace);
                 });
+          }
+          else {
+            console.log("Unkown module type: ", module);
           }
         },
         withModule, "loadModule(" + modstring.substring(0, 70) + ")");
@@ -3630,6 +3632,9 @@ function isMethod(obj) { return obj instanceof PMethod; }
       return loadJSModules(namespace, modules, function(/* args */) {
         var ms = Array.prototype.slice.call(arguments);
         function wrapMod(m) {
+          if (typeof m === 'undefined') {
+            console.error("Undefined module in this list: ", modules, String(withModules).slice(0, 500));
+          }
           if (hasField(m, "provide-plus-types")) {
             return getField(m, "provide-plus-types");
           }
